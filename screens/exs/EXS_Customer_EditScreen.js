@@ -2,10 +2,10 @@
 import React from 'react';
 import {  
   Alert,
+  //Button,
   FormattedDate,
   Image, 
   Platform,
-  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,26 +13,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
+import { MonoText } from '../../components/StyledText';
 import { AsyncStorage, BackHandler } from 'react-native';
-//import { ActivityIndicator, FlatList } from 'react-native';
-//import { List, ListItem } from 'react-native';
+
+import { FlatList, ActivityIndicator  } from 'react-native';
+import Moment from 'moment';
+import { List, ListItem } from 'react-native';
 
 import { Button, Icon } from 'react-native-elements';
 
-//import { MonoText } from '../../components/StyledText';
-import Moment from 'moment';
-
 import DatePicker from 'react-native-datepicker';
-//import ActionButton from 'react-native-action-button';
 
-import DTS_PersonnelsApi from '../../class_api/DTS_PersonnelsApi';
+import EXS_CustomersApi from '../../class_api/EXS_CustomersApi'; 
 
-
-export default class DTS_Personnel_EditScreen extends React.Component {  
+export default class EXS_Customer_EditScreen extends React.Component {  
   
   static navigationOptions = ({ navigation }) => ({
-    title: 'Edit - DTS Personnel',
+    title: 'ตัวอย่าง - สอบออนไลน์(ใหม่)',
     headerStyle: {
       backgroundColor: '#3366CC',
     },
@@ -51,25 +48,25 @@ export default class DTS_Personnel_EditScreen extends React.Component {
     
     this.state = {
 
-      //dataSource: null,
+      dataSource: null,
+      dataSource_score: null,
 
-      id: this.CheckParam('id'),  
+      id: this.CheckParam('id'),
+      
       code: "",
-      no: "",
       prefix: "",
       firstname: "",
-      surname: "",
-      position: "",
-      personneltype: "",
-      address: "",
-      telephone: "",
+      lastname: "",
+      customer_type: "",
+      cus_status: "",
+      department: "",
+      phone: "",
       email: "",
-      division: "",
-      detail: "",
       remark: "",
+      created_by: "",
+      updated_by: "",
       created_at: "",
       updated_at: "",
-
     };    
   }
   
@@ -85,74 +82,74 @@ export default class DTS_Personnel_EditScreen extends React.Component {
         }
     });*/
 
-    this.GetDataEdit();      
+    this.GetCoPTNew();      
   }  
   
-  GetDataEdit = async () => {
-        
-    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
-
-    try {
-      //let response_msg = 'No get data.'; 
-      let data = null;   
-      data = await dTS_PersonnelsApi.get(this.state.id);
+  GetCoPTNew = async () => {     
+    
+    fetch(      
+      'http://localhost/traineedrive/public/api/exs/customer/' + this.state.id 
+      )   
+      .then((response) => response.json())
+      .then((responseJson) => {
 
       this.setState(
         {
           isLoading: false,          
-          //dataSource: data.personnel,        
-          
-          code: data.personnel.code,
-          no: data.personnel.no,
-          prefix: data.personnel.prefix,
-          firstname : data.personnel.firstname,
-          surname: data.personnel.surname,
-          position: data.personnel.position,
-          personneltype: data.personnel.personneltype,
-          address: data.personnel.address,
-          telephone: data.personnel.telephone,
-          email: data.personnel.email,
-          division: data.personnel.division,
-          detail: data.personnel.detail,
-          remark: data.personnel.remark,
-          created_at: data.personnel.created_at,
-          updated_at: data.personnel.updated_at,
-
+          //dataSource: responseJson.examinee_exam[0].examinee, //
+          //dataSource_score: responseJson.examinee_exam[0].exam_score_includes, //
+          code: responseJson.customer.code,
+          prefix: responseJson.customer.prefix,
+          firstname: responseJson.customer.firstname,
+          lastname: responseJson.customer.lastname,
+          customer_type: responseJson.customer.customer_type,
+          cus_status: responseJson.customer.cus_status,
+          department: responseJson.customer.department,
+          phone: responseJson.customer.phone,
+          email: responseJson.customer.email,
+          remark: responseJson.customer.remark,
+          created_by: responseJson.customer.created_by,
+          updated_by: responseJson.customer.updated_by,
+          created_at: responseJson.customer.created_at,
+          updated_at: responseJson.customer.updated_at,
         },
         function(){ }
       );
-
-      //response_msg = data.message;
-      //Alert.alert('แจ้งเตือน', JSON.stringify(response_msg));      
-    }
-    catch (error) {
+    })
+    .catch((error) =>{
       console.error(error);
-    }
+    });
   }
-
   CheckParam(p_name){
     let p_val = this.props.navigation.getParam('param_'+p_name);     
     return ( p_val == null ? "" : (p_val != "null" ? String(p_val) : "") );
-  }
+  } 
 
-  UpdateData = async () => {    
+
+UpdateData = async () => {                      //
 
     const { navigate } = this.props.navigation;
 
     const { id,
+      /*
       code,  no, prefix, firstname, surname,
       position, personneltype, address, telephone, email, 
       division, detail, remark, created_at, updated_at,
+      */
+      code, prefix, firstname, lastname, customer_type,       //
+      cus_status, department, phone, email, remark,
+      created_by, updated_by, created_at, updated_at,         //
+
     } = this.state;
 
-    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
+    const eXS_CustomersApi = new EXS_CustomersApi(); //
 
     try {
         
-      let response_msg = 'No update.';
+      let response_msg = 'no update';
       let data = {
         
-        code: code,
+        /*code: code,
         no: no,
         prefix: prefix,
         firstname: firstname,
@@ -165,19 +162,37 @@ export default class DTS_Personnel_EditScreen extends React.Component {
         division: division,
         detail: detail,
         remark: remark,
+        */
+        code: code,         //
+        prefix: prefix,
+        firstname: firstname,
+        lastname: lastname,
+        customer_type: customer_type,
+        cus_status: cus_status,
+        department: department,
+        phone: phone,
+        email: email,
+        remark: remark,
+        //created_by: created_by,
+        //updated_by: updated_by,
+        //created_at: created_at,
+        //updated_at: updated_at,      //
         //created_at: created_at,
         //updated_at: updated_at,
       };
 
-      response_msg = await dTS_PersonnelsApi.update(id, data);
+      //alert('firstname'+this.state.firstname);
+
+      response_msg = await eXS_CustomersApi.update(id, data); //
+
       Alert.alert(JSON.stringify(response_msg));
-    }
-    catch (error) {
+
+    } catch (error) {
       console.error(error);
     }
 
     //navigate('DTS_Personnel_List')
-    navigate('DTS_Personnel_View',{
+    navigate('EXS_Customer_View',{
 
       param_id: this.state.id,
       /*
@@ -186,17 +201,33 @@ export default class DTS_Personnel_EditScreen extends React.Component {
       param_latitude: this.state.latitude,
       param_longitude: this.state.longitude
       */
-    });    
+    });
+    
   }
 
+
   render() {
-    const {navigate} = this.props.navigation;  
-   
+    const {navigate} = this.props.navigation;                  
+
     return(     
       <View style={styles.container}>
         <ScrollView>
-                             
-          <View style={{flex: 1, flexDirection: 'row'}}>
+                    
+          <Text style={styles.header}>
+            ข้อมูลคะแนนสอบ
+          </Text>          
+                    
+          <Text style={styles.text}>รหัส : { this.state.code }</Text>
+          <Text style={styles.text}>ชื่อ - สกุล : { this.state.prefix + this.state.firstname + ' ' + this.state.lastname }</Text>                         
+          <Text style={styles.text}>ประเภทผู้ใช้ : { this.state.customer_type }</Text> 
+          <Text style={styles.text}>สถานะ : { this.state.cus_status }</Text>
+          <Text style={styles.text}>สาขา : { this.state.department }</Text>
+          <Text style={styles.text}>เบอร์โทร : { this.state.phone }</Text>
+          <Text style={styles.text}>อีเมล : { this.state.email }</Text>
+
+
+
+          <View style={{flex: 1, flexDirection: 'row'}}>          
             <Text style={styles.header}>
               ข้อมูลบุคลากร
             </Text>
@@ -218,14 +249,7 @@ export default class DTS_Personnel_EditScreen extends React.Component {
             placeholder={'รหัส'}
             style={styles.input} 
           />
-          <Text style={styles.text}>เลขที่ :</Text>
-          <TextInput 
-            value={this.state.no}
-            onChangeText={(no) => this.setState({ no })}
-            placeholder={'เลขที่'}
-            style={styles.input} 
-          />
-          <Text style={styles.text}>คำนำหน้า :</Text>
+           <Text style={styles.text}>คำนำหน้า :</Text>
           <TextInput 
             value={this.state.prefix}
             onChangeText={(prefix) => this.setState({ prefix })}
@@ -241,82 +265,47 @@ export default class DTS_Personnel_EditScreen extends React.Component {
           />
           <Text style={styles.text}>สกุล :</Text>
           <TextInput 
-            value={this.state.surname}
-            onChangeText={(surname) => this.setState({ surname })}
+            value={this.state.lastname}
+            onChangeText={(lastname) => this.setState({ lastname })}
             placeholder={'ชื่อ - สกุล'}
             style={styles.input} 
           />
-
-          <Text style={styles.text}>ตำแหน่ง :</Text>
+          <Text style={styles.text}>ประเภทผู้ใช้ :</Text>
           <TextInput 
-            value={this.state.position}
-            onChangeText={(position) => this.setState({ position })}
-            placeholder={'ตำแหน่ง'}
+            value={this.state.customer_type}
+            onChangeText={(customer_type) => this.setState({ customer_type })}
+            placeholder={'ประเภทผู้ใช้'}
             style={styles.input} 
           />
-
-          <Text style={styles.text}>ประเภทบุคลากร :</Text>
+          <Text style={styles.text}>สถานะ :</Text>
           <TextInput 
-            value={this.state.personneltype}
-            onChangeText={(personneltype) => this.setState({ personneltype })}
-            placeholder={'ประเภทบุคลากร'}
-            style={styles.input}
-          />           
-
-          <Text style={styles.text}>ที่อยู่ :</Text>
-          <TextInput 
-            value={this.state.address}
-            onChangeText={(address) => this.setState({ address })}
-            placeholder={'ที่อยู่'}
-            style={styles.input}
+            value={this.state.cus_status}
+            onChangeText={(cus_status) => this.setState({ cus_status })}
+            placeholder={'สถานะ'}
+            style={styles.input} 
           />
-
-          <Text style={styles.text}>เบอร์โทร :</Text>
+          <Text style={styles.text}>สาขา :</Text>
           <TextInput 
-            value={this.state.telephone}
-            onChangeText={(telephone) => this.setState({ telephone })}
+            value={this.state.department}
+            onChangeText={(department) => this.setState({ department })}
+            placeholder={'สาขา'}
+            style={styles.input}
+          />                                            
+           <Text style={styles.text}>เบอร์โทร :</Text>
+          <TextInput 
+            value={this.state.phone}
+            onChangeText={(phone) => this.setState({ phone })}
             placeholder={'เบอร์โทร'}
             style={styles.input}
           />
-
-          <Text style={styles.text}>อีเมล :</Text>
+           <Text style={styles.text}>อีเมล :</Text>
           <TextInput 
             value={this.state.email}
             onChangeText={(email) => this.setState({ email })}
             placeholder={'อีเมล'}
             style={styles.input}
-          />
-
-          <Text style={styles.text}>สังกัดหน่วยงาน :</Text>
-          <TextInput 
-            value={this.state.division}
-            onChangeText={(division) => this.setState({ division })}
-            placeholder={'สังกัดหน่วยงาน'}
-            style={styles.input}
-          />
-
-          <Text style={styles.text}>รายละเอียด :</Text>
-          <TextInput 
-            value={this.state.detail}
-            onChangeText={(detail) => this.setState({ detail })}
-            placeholder={'รายละเอียด'}
-            style={styles.input}
-          />  
-
-          <Text style={styles.text}>หมายเหตุ :</Text>
-          <TextInput 
-            value={this.state.remark}
-            onChangeText={(remark) => this.setState({ remark })}
-            placeholder={'รายละเอียด'}
-            style={styles.input}
-          />
-          <Text style={styles.text}>ปรับปรุงข้อมูล :</Text>
-          <TextInput 
-            value={this.state.updated_at }
-            onChangeText={(updated_at) => this.setState({ updated_at })}
-            placeholder={'รายละเอียด'}
-            style={styles.input}
-          />
+          />                                              
+          
 
           <Text style={styles.text}>ปรับปรุงข้อมูล :</Text>          
           <DatePicker            
@@ -382,9 +371,9 @@ export default class DTS_Personnel_EditScreen extends React.Component {
             icon={{}}
             buttonStyle={ styles.button }
             onPress={ () =>  navigate('DTS_Personnel_View') }            
-          />
+          />                                                      
 
-             
+
         </ScrollView>
       </View>      
     );
@@ -404,8 +393,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     fontSize: 20,
-    fontWeight: 'bold', 
-    width: 150, 
+    fontWeight: 'bold',  
     marginTop: 20,
     marginBottom: 15,
   },
@@ -419,9 +407,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 15,
   },  
-  input: {    
+  input: {
     /*borderColor: 'gray',
+    borderColor: 'gray',
     backgroundColor: 'lightgray',*/
+    
     color: 'black',
     borderRadius: 20,
     borderWidth: 1,

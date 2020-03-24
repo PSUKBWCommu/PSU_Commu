@@ -1,40 +1,33 @@
 
-import React from 'react';
+import React from "react";
 import { 
-  Alert,
-  FormattedDate,
-  Image,
-  Platform,
-  RefreshControl,
-  ScrollView,
+  Alert, 
   StyleSheet, 
   Text, 
   TextInput, 
-  TouchableOpacity,
   View, 
 } from 'react-native';
+import { ScrollView, Image } from "react-native";
+import { Button, Icon } from 'react-native-elements'
 
-import { AsyncStorage, BackHandler } from 'react-native';
-import { ActivityIndicator, FlatList } from 'react-native';
-//import { List, ListItem } from 'react-native';
+import { AsyncStorage, BackHandler, } from 'react-native'
+import { MonoText } from '../../components/StyledText';
 
-import { Button, Icon } from 'react-native-elements';
-
-//import { MonoText } from '../../components/StyledText';
-import Moment from 'moment';
-
-//import DatePicker from 'react-native-datepicker';
 import ActionButton from 'react-native-action-button';
+import { 
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 
-import DTS_PersonnelsApi from '../../class_api/DTS_PersonnelsApi';
 
-
-export default class DTS_Personnel_ListScreen extends React.Component {
+export default class EXS_Reserve_ListScreen extends React.Component {
     
   static navigationOptions = ({ navigation }) => ({
-    title: 'Get - DTS Personnel',
+    title: 'EXS - Reserve List',
     headerStyle: {
-      backgroundColor: '#3366CC',
+      backgroundColor: '#330033',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -76,20 +69,18 @@ export default class DTS_Personnel_ListScreen extends React.Component {
   }
   
   componentDidMount(){
-    /*
-      const { navigate } = this.props.navigation;
-      AsyncStorage.multiGet(['username', 'password']).then((data) => {
-          let username = data[0][1];
-          let password = data[1][1];
+    /*const { navigate } = this.props.navigation;
+    AsyncStorage.multiGet(['username', 'password']).then((data) => {
+        let username = data[0][1];
+        let password = data[1][1];
 
-          //if (username !== 'tonlove') {
-          if(typeof username !== 'string' || username === null || username === undefined) {
-            navigate('SignIn', {name: 'User'})        
-          }
-      });
-    */
-    this.GetDataList();
-    
+        //if (username !== 'tonlove') {
+        if(typeof username !== 'string' || username === null || username === undefined) {
+          navigate('SignIn', {name: 'User'})        
+        }
+    });*/
+  
+  // sitthinai 2019_09_19, add code, for refresh screen
     //Here is the Trick
     const { navigation } = this.props;
     //Adding an event listner om focus
@@ -98,7 +89,7 @@ export default class DTS_Personnel_ListScreen extends React.Component {
       this.setState({         
         dataSource: null,
       });
-      this.GetDataList();
+      this.ShowEXSReserve();
     });    
   }
 
@@ -108,56 +99,31 @@ export default class DTS_Personnel_ListScreen extends React.Component {
   //  this.focusListener.remove();      
   //}
     
-  GetDataList =  async () => {    
-
-    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
-
-    try {
-      //let response_msg = 'No get data.'; 
-      let data = null;   
-      data = await dTS_PersonnelsApi.all();
+  ShowEXSReserve =  async () => {       
+    await fetch( 
+    'http://localhost/traineedrive_F/public/api/exs/reserve/'
+    )
+    .then((response) => response.json())
+    .then((responseJson) => {
 
       this.setState(
         {
           isLoading: false,
-          dataSource: data.personnels,
+          dataSource: responseJson.reserve,
         }, 
         function(){ }
       );
-      this.arrayholder = data.personnels;
-
-      response_msg = data.message;
-      Alert.alert('แจ้งเตือน', JSON.stringify(response_msg));      
-    }
-    catch (error) {
+      this.arrayholder = responseJson.reserve;
+    })
+    .catch((error) =>{
       console.error(error);
-    }
+    });
   }
       
-  // DTS Personnel
-  /*
-    id: 1,
-    code: "staff_01",
-    no: "ch_1",
-    prefix: "นาง",
-    firstname: "ดนยา",
-    surname: "วราสิทธิชัย",
-    position: "นักวิชาการศึกษาชำนาญการพิเศษ",
-    personneltype: "หัวหน้า",
-    address: "ศูนย์คอมพิวเตอร์",
-    telephone: "074282090",
-    email: "donya.w@psu.ac.th",
-    division: "ศูนย์คอมพิวเตอร์",
-    detail: "ทดสอบเพิ่มรายละเอียด",
-    remark: "หัวหน้ากลุ่มงานบริการวิชาการ",
-    created_at: "2018-04-04 00:23:39",
-    updated_at: "2018-07-16 10:30:24"
-  */
-
   SearchFilterFunction(text){
     let str = '';
     const newData = this.arrayholder.filter(function(item){
-      const schedule = 'staff_-'+String(item.examScheduleID).padStart(4, '0');
+      const schedule = 'COP-'+String(item.examScheduleID).padStart(4, '0');
       const itemData = str.concat(item.examineeAccount, item.moduleNameAbbr, schedule).toUpperCase()
       //const itemData = item.ExamScheduleID.toUpperCase()
       const textData = text.toUpperCase()
@@ -174,14 +140,15 @@ export default class DTS_Personnel_ListScreen extends React.Component {
       <View style={{
         height: 1,
         width:"100%",
-        backgroundColor:"rgba(0,0,0,0.5)",        
+        backgroundColor:"rgba(0,0,0,0.5)",
+        
       }}/>
     );
   }
 
   _onRefresh = () => {
     this.setState({refreshing: true});
-    this.GetDataList().then(() => {
+    this.ShowEXSReserve().then(() => {
       this.setState({refreshing: false});
     });
   }
@@ -191,25 +158,21 @@ export default class DTS_Personnel_ListScreen extends React.Component {
 
     return(     
       <View style={styles.container}>
-
         <ScrollView
-          refreshControl={
+          RefreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
           }
         >
-          <View style={styles.searchSection}>
-            <Icon style={styles.searchIcon} name="search" size={20} color='#696969'/>
-            <TextInput 
-                style={styles.input}
-                onChangeText={(text) => this.SearchFilterFunction(text)}
-                value={this.state.text}
-                underlineColorAndroid='black'
-                placeholder="ค้นหารหัสรอบสอบ"
-            /> 
-          </View>
+          <Text style={styles.header}>
+            รายการจองตรวจข้อสอบ
+          </Text>
+          
+
+
+
 
           <FlatList
             data={this.state.dataSource}
@@ -217,58 +180,30 @@ export default class DTS_Personnel_ListScreen extends React.Component {
             renderItem = { ({item}) =>              
               <TouchableOpacity 
                 onPress={() => {
-                  navigate('DTS_Personnel_View', {
-
-                    param_id: item.id,
-
-                    /*
-                    param_code: item.code,
-                    param_no: item.no,
-                    param_prefix: item.prefix,  
-                    param_firstname: item.firstname,
-                    param_surname: item.surname,
-                    param_position: item.position,
-                    param_personneltype: item.personneltype,
-                    param_address: item.address,
-                    param_telephone: item.telephone,
-                    param_email: item.email,
-                    param_division: item.division,
-                    param_detail: item.detail,
-                    param_remark: item.remark,
-                    */
+                  navigate('EXS_Reserve_View', {   
+                    param_id: item.id,      //เปิด id 
 
                   })
                 }} 
                 style={styles.list} 
               >            
-                <Text style={styles.text}>รหัส : { item.code } </Text>
-                <Text style={styles.text}>ชื่อ - สกุล : { item.prefix }{ item.firstname } { item.surname }</Text>
-                
+                <Text style={styles.text}>รหัสจอง : { item.code }</Text>
+                <Text style={styles.text}>ชื่อ : { item.name }</Text>
+               
                 <View style={styles.buttonSection}>
                   <Button
-                    onPress={() => {
-                      navigate('Information', {
-
-                        param_id: item.id,
-                        param_code: item.code,
-                        param_no: item.no,
-                        param_prefix: item.prefix,  
-                        param_firstname: item.firstname,
-                        param_surname: item.surname,
-                        param_position: item.position,
-                        param_personneltype: item.personneltype,
-                        param_address: item.address,
-                        param_telephone: item.telephone,
-                        param_email: item.email,
-                        param_division: item.division,
-                        param_detail: item.detail,
-                        param_remark: item.remark,
-
+                    onPress={() => {navigate('EXS_Reserve_View', {
+                        param_id: item.id,      //เปิด id 
+                        /*
+                        param_id: data.item.id, 
+                        param_code: data.item.code,
+                        param_name: data.item.name,
+                        */
                       })
                     }}
                     buttonStyle={ styles.button }                      
                     titleStyle={{ fontSize: 18 }}
-                    title="ข้อมูล"
+                    title="ข้อมูลจองตรวจ"
                   >                
                   </Button>
                 </View>
@@ -280,10 +215,12 @@ export default class DTS_Personnel_ListScreen extends React.Component {
           </FlatList>
         </ScrollView> 
 
+
         <ActionButton 
           buttonColor="rgba(231,76,60,1)" 
-          onPress = {()=> {navigate('DTS_Personnel_Add')}} 
-        />
+          onPress = {()=> {navigate('EXS_Reserve_Add')}}         //ปุ่มบวก
+        />        
+
 
       </View>      
     );
@@ -305,6 +242,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff"
+  },
+
+  header: {
+    alignItems: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginBottom: 15,
   },
   searchSection: {
     flexDirection: 'row',
@@ -384,5 +329,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginRight: 10,
     marginBottom: 0,  
-  },
+  },  
+  
 });

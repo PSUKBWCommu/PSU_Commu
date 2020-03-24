@@ -85,14 +85,14 @@ export default class DTS_Personnel_AddScreen extends React.Component {
         }
     });*/
    
-    this.GetDataEdit();  
+    this.GetDataAdd();  
   }
 
-  GetDataEdit = async () => {
+  GetDataAdd = async () => {
     
-    fetch(            
+    /*fetch(            
       //'http://localhost:8080/traineedrive/public/api/dts/personnel/12'
-      'http://localhost:8080/traineedrive/public/api/dts/personnel/12'
+      'http://192.168.2.246:8080/traineedrive/public/api/dts/personnel/12'
       )   
       .then((response) => response.json())
       .then((responseJson) => {        
@@ -124,10 +124,49 @@ export default class DTS_Personnel_AddScreen extends React.Component {
     })
     .catch((error) =>{
       console.error(error);
-    });
+    });*/
+
+    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
+
+    try {
+      //let response_msg = 'No get data.'; 
+      let data = null;   
+      data = await dTS_PersonnelsApi.get(this.state.id);
+
+      this.setState(
+        {
+          isLoading: false,          
+          //dataSource: data.personnel,        
+          
+          code: data.personnel.code,
+          no: data.personnel.no,
+          prefix: data.personnel.prefix,
+          firstname : data.personnel.firstname,
+          surname: data.personnel.surname,
+          position: data.personnel.position,
+          personneltype: data.personnel.personneltype,
+          address: data.personnel.address,
+          telephone: data.personnel.telephone,
+          email: data.personnel.email,
+          division: data.personnel.division,
+          detail: data.personnel.detail,
+          remark: data.personnel.remark,
+          created_at: data.personnel.created_at,
+          updated_at: data.personnel.updated_at,
+
+        },
+        function(){ }
+      );
+
+      //response_msg = data.message;
+      //Alert.alert('แจ้งเตือน', JSON.stringify(response_msg));      
+    }
+    catch (error) {
+      console.error(error);
+    }
   }
 
-  AddData = async () => {    
+  AddData = async () => {
 
     const { navigate } = this.props.navigation;
 
@@ -141,7 +180,7 @@ export default class DTS_Personnel_AddScreen extends React.Component {
 
     try {
         
-      let response_msg = 'no update';
+      let response_msg = 'No insert.';
       let data = {
         
         code: code,
@@ -162,10 +201,9 @@ export default class DTS_Personnel_AddScreen extends React.Component {
       };
 
       response_msg = await dTS_PersonnelsApi.create(data);
-
       Alert.alert(JSON.stringify(response_msg));
-
-    } catch (error) {
+    } 
+    catch (error) {
       console.error(error);
     }
 
@@ -179,8 +217,7 @@ export default class DTS_Personnel_AddScreen extends React.Component {
       param_latitude: this.state.latitude,
       param_longitude: this.state.longitude
       
-    });*/
-    
+    });*/    
   }
 
   render() {
