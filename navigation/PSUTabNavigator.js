@@ -62,11 +62,13 @@ CoPTNewStack.navigationOptions = {
 
 
 export default createBottomTabNavigator({
-    DTSStack,
-    ITSStack,
+    //DTSStack,
+    //ITSStack,
     NFRStack,
+    ITSStack,
     CoPTOldStack,
-    CoPTNewStack,    
+    CoPTNewStack,   
+    DTSStack, 
 });
 
 
