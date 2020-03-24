@@ -89,43 +89,47 @@ export default class DTS_Personnel_EditScreen extends React.Component {
   }  
   
   GetDataEdit = async () => {
-    
-    fetch(            
-      //'http://localhost:8080/traineedrive/public/api/dts/personnel/' + this.state.id
-      'http://localhost:8080/traineedrive/public/api/dts/personnel/' + this.state.id
-      )   
-      .then((response) => response.json())
-      .then((responseJson) => {        
+        
+    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
+
+    try {
+      //let response_msg = 'No get data.'; 
+      let data = null;   
+      data = await dTS_PersonnelsApi.get(this.state.id);
 
       this.setState(
         {
           isLoading: false,          
-          //dataSource: responseJson.personnel,        
+          //dataSource: data.personnel,        
           
-          code: responseJson.personnel.code,
-          no: responseJson.personnel.no,
-          prefix: responseJson.personnel.prefix,
-          firstname : responseJson.personnel.firstname,
-          surname: responseJson.personnel.surname,
-          position: responseJson.personnel.position,
-          personneltype: responseJson.personnel.personneltype,
-          address: responseJson.personnel.address,
-          telephone: responseJson.personnel.telephone,
-          email: responseJson.personnel.email,
-          division: responseJson.personnel.division,
-          detail: responseJson.personnel.detail,
-          remark: responseJson.personnel.remark,
-          //created_at: responseJson.personnel.created_at,
-          //updated_at: responseJson.personnel.updated_at,
+          code: data.personnel.code,
+          no: data.personnel.no,
+          prefix: data.personnel.prefix,
+          firstname : data.personnel.firstname,
+          surname: data.personnel.surname,
+          position: data.personnel.position,
+          personneltype: data.personnel.personneltype,
+          address: data.personnel.address,
+          telephone: data.personnel.telephone,
+          email: data.personnel.email,
+          division: data.personnel.division,
+          detail: data.personnel.detail,
+          remark: data.personnel.remark,
+          created_at: data.personnel.created_at,
+          updated_at: data.personnel.updated_at,
 
         },
         function(){ }
       );
-    })
-    .catch((error) =>{
+
+      //response_msg = data.message;
+      //Alert.alert('แจ้งเตือน', JSON.stringify(response_msg));      
+    }
+    catch (error) {
       console.error(error);
-    });
+    }
   }
+
   CheckParam(p_name){
     let p_val = this.props.navigation.getParam('param_'+p_name);     
     return ( p_val == null ? "" : (p_val != "null" ? String(p_val) : "") );
@@ -145,7 +149,7 @@ export default class DTS_Personnel_EditScreen extends React.Component {
 
     try {
         
-      let response_msg = 'no update';
+      let response_msg = 'No update.';
       let data = {
         
         code: code,
@@ -166,10 +170,9 @@ export default class DTS_Personnel_EditScreen extends React.Component {
       };
 
       response_msg = await dTS_PersonnelsApi.update(id, data);
-
       Alert.alert(JSON.stringify(response_msg));
-
-    } catch (error) {
+    }
+    catch (error) {
       console.error(error);
     }
 
@@ -183,8 +186,7 @@ export default class DTS_Personnel_EditScreen extends React.Component {
       param_latitude: this.state.latitude,
       param_longitude: this.state.longitude
       */
-    });
-    
+    });    
   }
 
   render() {

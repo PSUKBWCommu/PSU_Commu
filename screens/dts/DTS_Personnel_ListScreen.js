@@ -108,25 +108,30 @@ export default class DTS_Personnel_ListScreen extends React.Component {
   //  this.focusListener.remove();      
   //}
     
-  GetDataList =  async () => {       
-    await fetch(     
-    //'http://localhost:8080/traineedrive/public/api/dts/personnel'
-    'http://localhost:8080/traineedrive/public/api/dts/personnel'
-    )
-    .then((response) => response.json())
-    .then((responseJson) => {
+  GetDataList =  async () => {    
+
+    const dTS_PersonnelsApi = new DTS_PersonnelsApi();
+
+    try {
+      //let response_msg = 'No get data.'; 
+      let data = null;   
+      data = await dTS_PersonnelsApi.all();
+
       this.setState(
         {
           isLoading: false,
-          dataSource: responseJson.personnels,
+          dataSource: data.personnels,
         }, 
         function(){ }
       );
-      this.arrayholder = responseJson.personnels;
-    })
-    .catch((error) =>{
+      this.arrayholder = data.personnels;
+
+      response_msg = data.message;
+      Alert.alert('แจ้งเตือน', JSON.stringify(response_msg));      
+    }
+    catch (error) {
       console.error(error);
-    });
+    }
   }
       
   // DTS Personnel
@@ -148,6 +153,7 @@ export default class DTS_Personnel_ListScreen extends React.Component {
     created_at: "2018-04-04 00:23:39",
     updated_at: "2018-07-16 10:30:24"
   */
+
   SearchFilterFunction(text){
     let str = '';
     const newData = this.arrayholder.filter(function(item){
@@ -378,6 +384,5 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginRight: 10,
     marginBottom: 0,  
-  },  
-  
+  },
 });

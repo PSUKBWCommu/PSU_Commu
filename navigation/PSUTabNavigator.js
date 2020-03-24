@@ -11,6 +11,7 @@ import NFRScreen from '../screens/sub_module/NFRScreen';
 
 import CoPTOld_ListScreen from '../screens/copt_old/CoPTOld_ListScreen';
 import CoPTOld_ViewScreen from '../screens/copt_old/CoPTOld_ViewScreen';
+
 import CoPTNew_ListScreen from '../screens/copt_new/CoPTNew_ListScreen';
 import CoPTNew_ViewScreen from '../screens/copt_new/CoPTNew_ViewScreen';
 
@@ -20,22 +21,13 @@ import DTS_Personnel_ViewScreen from '../screens/dts/DTS_Personnel_ViewScreen';
 import DTS_Personnel_EditScreen from '../screens/dts/DTS_Personnel_EditScreen';
 
 
-const DTSStack = createStackNavigator({
-    DTS_Personnel_List: DTS_Personnel_ListScreen,
-    DTS_Personnel_Add: DTS_Personnel_AddScreen,
-    DTS_Personnel_View: DTS_Personnel_ViewScreen,
-    DTS_Personnel_Edit: DTS_Personnel_EditScreen,
-  });
-  DTSStack.navigationOptions = {
-    tabBarLabel: 'DTS',    
+const ITSStack = createStackNavigator({
+  ITS: ITSScreen,
+});
+ITSStack.navigationOptions = {
+  tabBarLabel: 'ITS',    
 };
 
-const ITSStack = createStackNavigator({
-    ITS: ITSScreen,
-  });
-  ITSStack.navigationOptions = {
-    tabBarLabel: 'ITS',    
-};
 
 const NFRStack = createStackNavigator({
   NFR: NFRScreen,
@@ -43,6 +35,7 @@ const NFRStack = createStackNavigator({
 NFRStack.navigationOptions = {
   tabBarLabel: 'NFR',  
 };
+
 
 const CoPTOldStack = createStackNavigator({
   CoPTOld_List: CoPTOld_ListScreen,
@@ -60,15 +53,23 @@ CoPTNewStack.navigationOptions = {
   tabBarLabel: 'CoPT-New',
 };
 
+const DTSStack = createStackNavigator({
+  DTS_Personnel_List: DTS_Personnel_ListScreen,
+  DTS_Personnel_Add: DTS_Personnel_AddScreen,
+  DTS_Personnel_View: DTS_Personnel_ViewScreen,
+  DTS_Personnel_Edit: DTS_Personnel_EditScreen,
+});
+DTSStack.navigationOptions = {
+  tabBarLabel: 'DTS',    
+};
+
 
 export default createBottomTabNavigator({
-    DTSStack,
+    //DTSStack,
     ITSStack,
     NFRStack,
     CoPTOldStack,
-    CoPTNewStack,    
+    CoPTNewStack, 
+    DTSStack,   
 });
-
-
-
 
