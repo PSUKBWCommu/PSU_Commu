@@ -39,6 +39,22 @@ export default class NFRL_Customer_AddScreen extends React.Component {
       alignSelf: 'center',
       marginRight: 70,
     },
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()} >
+        <Image
+          source={require('../../image/drawer.png')}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 35,
+            width: 35,
+            marginLeft: 10,
+            resizeMode: 'stretch',
+            backgroundColor: 'white',
+          }}
+        />
+      </TouchableOpacity>
+    ),
   });
 
   constructor(props) {
@@ -68,19 +84,6 @@ export default class NFRL_Customer_AddScreen extends React.Component {
       password: "",
       created_by: "",
       updated_by: "",
-    
-      /*
-      id: '',
-      examineeid: '',
-      examinee_account: '',
-      module_name_abbr: '',
-      scheduleid: '',
-      enter_score_people: '',
-      enter_score_date: '',
-      is_enter_score: '',
-      totalscore: '',
-      examresult: '',
-      */
     };
   }
 
@@ -245,6 +248,14 @@ AddData = async () => {
             ป้อนข้อมูลสมัครสมาชิก
           </Text>
 
+          <Text style={styles.text}>รหัสสมาชิก :</Text>
+          <TextInput 
+            value={this.state.code}
+            onChangeText={(code) => this.setState({ code })}
+            placeholder={'ประเภท'}
+            style={styles.input} 
+          />
+
          
       
           
@@ -313,7 +324,7 @@ AddData = async () => {
             style={styles.input}
           />
 
-           <Text style={styles.text}>เบอร์โทร :</Text>
+          <Text style={styles.text}>เบอร์โทร :</Text>
           <TextInput 
             value={this.state.phone}
             onChangeText={(phone) => this.setState({ phone })}
@@ -321,7 +332,7 @@ AddData = async () => {
             style={styles.input}
           />
 
-        <Text style={styles.text}>อีเมล :</Text>
+          <Text style={styles.text}>อีเมล :</Text>
           <TextInput 
             value={this.state.email}
             onChangeText={(email) => this.setState({ email })}
@@ -329,13 +340,32 @@ AddData = async () => {
             style={styles.input}
           />
 
-           <Text style={styles.text}>ที่อยู่ :</Text>
+          <Text style={styles.text}>ที่อยู่ :</Text>
           <TextInput 
             value={this.state.address}
             onChangeText={(address) => this.setState({ address })}
             placeholder={'15 ถ.กาญจนวนิชย์, หาดใหญ่, สงขลา 9011'}
             style={styles.input}
           />
+
+          <Text style={styles.text}>ชื่อบัญชีผู้ใช้ :</Text>
+          <TextInput 
+            value={this.state.username}
+            onChangeText={(username) => this.setState({ username })}
+            placeholder={'ชื่อบัญชีผู้ใช้'}
+            style={styles.input}
+          />
+
+          <Text style={styles.text}>รหัสผ่าน :</Text>
+          <TextInput 
+            value={this.state.password}
+            onChangeText={(password) => this.setState({ password })}
+            placeholder={'รหัสผ่าน'}
+            style={styles.input}
+          />
+
+
+          
 
 
                   

@@ -39,6 +39,22 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
       alignSelf: 'center',
       marginRight: 70,
     },
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()} >
+        <Image
+          source={require('../../image/drawer.png')}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 35,
+            width: 35,
+            marginLeft: 10,
+            resizeMode: 'stretch',
+            backgroundColor: 'white',
+          }}
+        />
+      </TouchableOpacity>
+    ),
   });
 
 
@@ -124,7 +140,7 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
             isLoading: false,
             // dataSource: responseJson.examinee_exam[0].examinee,
             // dataSource_score: responseJson.examinee_exam[0].exam_score_includes,
-
+            id: responseJson.reserve.id,
             code: responseJson.reserve.code,
             name: responseJson.reserve.name,
             customer_id: responseJson.reserve.customer_id,
@@ -156,7 +172,7 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
   GetNotebookAll = async () => {   
 
     fetch(
-      'http://localhost/api/nfr/notebook_all'
+      'http://192.168.100.234/api/nfr/notebook_all'
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -178,7 +194,7 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
   GetNotebookRent = async () => {  
 
     fetch(
-      'http://localhost/api/nfr/notebook_rent'
+      'http://192.168.100.234/api/nfr/notebook_rent'
     )
       .then((response) => response.json())
       .then((responseJson) => {
@@ -276,9 +292,9 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
     const { navigate } = this.props.navigation;
 
     const { 
-      code, name, customer_id, staff_id, notebook_id, num_machine, reserve_status, 
+      id, code, name, customer_id, staff_id, notebook_id, num_machine, reserve_status, 
       queue_order, reserve_date, num_date, use_date, appoint_date, receive_date, return_date,
-      status, remark, created_by,updated_by
+      status, remark, created_by, updated_by,
 
     } = this.state;
 
@@ -399,7 +415,8 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
         
       let response_msg = 'no update';
       let data = {
-        
+
+        id: id,
         code: code,
         name: name,
         //customer_id: customer_id,
@@ -435,7 +452,7 @@ export default class NFRL_Reserve_AddScreen extends React.Component {
     }
 
     //navigate('DTS_Personnel_List')
-    navigate('NFRL_Reserve_View',{
+    navigate('NFRL_Reserve_List',{
 
       param_id: this.state.id,
       param_code: this.state.code,
@@ -474,6 +491,24 @@ render() {
           <Text style={styles.header}>
             ข้อมูลการจอง
           </Text>
+
+          <Text style={styles.text_index}>ลำดับที่ : </Text>
+            <TextInput
+              value={this.state.id}
+              onChangeText={(id) => this.setState({ id })}
+              style={styles.input_index}
+              editable={false} 
+              keyboardType='numeric'
+            />  
+
+          <Text style={styles.text_index}>รหัสจองเช่า : </Text>
+            <TextInput
+              value={this.state.code}
+              onChangeText={(code) => this.setState({ code })}
+              style={styles.input_index}
+              editable={false} 
+              keyboardType='numeric'
+            />            
 
           <Text style={styles.text}>ผู้ขอใช้บริการจองเช่า :</Text>
           <TextInput 
@@ -669,7 +704,7 @@ render() {
             raised
             icon={{}}
             buttonStyle={ styles.button }
-            onPress={ () =>  navigate('NFRL_Screen') }            
+            onPress={ () =>  navigate('NFRL_List') }            
           />
 
 
@@ -700,6 +735,16 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 18,
   },
+
+  textshow:{
+    fontSize:15,
+    textAlign:'center',
+    color:"#000000",
+    marginBottom:50,
+    marginTop: 30,
+
+  },
+
   text_index: {
     alignItems: 'center',
     fontSize: 18,

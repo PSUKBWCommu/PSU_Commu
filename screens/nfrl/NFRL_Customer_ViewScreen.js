@@ -38,6 +38,22 @@ export default class NFRL_Customer_ViewScreen extends React.Component {
       alignSelf: 'center',
       marginRight: 70,
     },
+    headerLeft: (
+      <TouchableOpacity onPress={() => navigation.toggleDrawer()} >
+        <Image
+          source={require('../../image/drawer.png')}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 35,
+            width: 35,
+            marginLeft: 10,
+            resizeMode: 'stretch',
+            backgroundColor: 'white',
+          }}
+        />
+      </TouchableOpacity>
+    ),
   });
 
   constructor(props) {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   Alert,
@@ -63,33 +62,15 @@ render() {
     return (
       <View style={styles.container}>
         <ScrollView>
+        
+
+
           <Text style={styles.header}>
             รายละเอียดเครื่องเช่า
           </Text>
-        <View style={styles.buttonSection}>
-          <Button
-            onPress={() => {
-              navigate('NFRL_Reserve_List', {})
-            }}
-            buttonStyle={styles.button}
-            titleStyle={{ fontSize: 18 }}
-            title="จองเช่าNotebook"
-                  >
-          </Button>
-      </View>
 
-        <View style={styles.buttonSection}>
-          <Button
-            onPress={() => {
-              navigate('NFRL_Customer_List', {})
-            }}
-            buttonStyle={styles.button}
-            titleStyle={{ fontSize: 18 }}
-            title="สมัครสมาชิก"
-                  >
-          </Button>
-      </View>
-                
+          
+     
 
         
       <View style={{flex: 1, flexDirection: 'row'}}>
@@ -99,7 +80,46 @@ render() {
               />        
       </View>      
 
-      <Text style={styles.header}>ข้อมูลรายการจองเช่าโน๊ตบุ๊ค</Text>
+      <Text style={styles.header}>ข้อมูลการจองเช่าโน๊ตบุ๊ค</Text>
+      <Text style={styles.header}>
+        อัตราค่าบริการ
+      </Text>
+
+        <Text>
+        - Notebook สำหรับนักศึกษา ม.อ. 50 บาท/เครื่อง/วัน
+        </Text>
+
+        <Text>
+        - Notebook สำหรับบุคลากร ม.อ. 150 บาท/เครื่อง/วัน
+        </Text>
+
+        <Text>
+        - Notebook สำหรับหน่วยงานภายใน 150 บาท/เครื่อง/วัน
+        </Text>
+
+        <Text>
+        - Notebook สำหรับหน่วยงานภายนอก 300 บาท/เครื่อง/วัน
+        </Text>
+
+      <Text style={styles.header}>
+        ติดต่อขอใช้บริการได้ที่
+      </Text>
+
+        <Text>
+        - กลุ่มงานบริการวิชาการ ศูนย์คอมพิวเตอร์ โทร. 0-7428-2116 ทุกวันทำการในเวลาราชการ
+        </Text>
+
+      <Text style={styles.header}>
+        หลักฐานประกอบการเช่า
+      </Text>
+
+        <Text>
+        - นักศึกษาและบุคลากร ม.อ. ใช้บัตรนักศึกษาและบัตรประชาชน (นักศึกษาต่างชาติ ใช้บัตรนักศึกษาและ หนังสือ Passport)
+        </Text>
+
+        <Text>
+        - สำหรับหน่วยงาน ทำหนังสือถึง ผู้อำนวยการศูนย์คอมพิวเตอร์
+        </Text>
       
          
       <Text style={styles.header}>อุปกรณ์ประกอบ</Text>
@@ -149,47 +169,21 @@ render() {
       </View>
           <Text>กระเป๋า</Text>
 
-      <Text style={styles.header}>
-        อัตราค่าบริการ
-      </Text>
+          <View style={styles.buttonSection}>
+          <Button
+            onPress={() => {
+              navigate('NFRL_Reserve_Add', {})
+            }}
+            buttonStyle={styles.button_regis}
+            titleStyle={{ fontSize: 18 }}
+            title="จองเช่าโน๊ตบุ๊ค"
+                  >
+          </Button>
+        </View>
 
-        <Text>
-        - Notebook สำหรับนักศึกษา ม.อ. 50 บาท/เครื่อง/วัน
-        </Text>
-
-        <Text>
-        - Notebook สำหรับบุคลากร ม.อ. 150 บาท/เครื่อง/วัน
-        </Text>
-
-        <Text>
-        - Notebook สำหรับหน่วยงานภายใน 150 บาท/เครื่อง/วัน
-        </Text>
-
-        <Text>
-        - Notebook สำหรับหน่วยงานภายนอก 300 บาท/เครื่อง/วัน
-        </Text>
-
-      <Text style={styles.header}>
-        ติดต่อขอใช้บริการได้ที่
-      </Text>
-
-        <Text>
-        - กลุ่มงานบริการวิชาการ ศูนย์คอมพิวเตอร์ โทร. 0-7428-2116 ทุกวันทำการในเวลาราชการ
-        </Text>
-
-      <Text style={styles.header}>
-        หลักฐานประกอบการเช่า
-      </Text>
-
-        <Text>
-        - นักศึกษาและบุคลากร ม.อ. ใช้บัตรนักศึกษาและบัตรประชาชน (นักศึกษาต่างชาติ ใช้บัตรนักศึกษาและ หนังสือ Passport)
-        </Text>
-
-        <Text>
-        - สำหรับหน่วยงาน ทำหนังสือถึง ผู้อำนวยการศูนย์คอมพิวเตอร์
-        </Text>
-
-        
+        <Text style={styles.text}>
+            หมายเหตุ : หากท่านยังไม่เป็น "สมาชิก" กรุณา "สมัครสมาชิก"ก่อนทำรายการ
+          </Text>
 
 
 
@@ -222,8 +216,11 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   text: {
-    marginBottom: 5,
-    fontSize: 18,
+     fontSize:15,
+    textAlign:'center',
+    color:"#000000",
+    marginBottom:50,
+    marginTop: 30,
   },
   text_index: {
     alignItems: 'center',
@@ -282,6 +279,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
 
   },
+   button_regis: {
+    borderWidth: 2,
+    borderRadius: 5,
+    backgroundColor: '#004fff',
+    height: 44,
+    width:150,
+    marginTop: 30,
+    minWidth: 10,
+  },
+
   errorMsg: {
     color: 'red'
   },
